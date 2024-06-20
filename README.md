@@ -1,2 +1,3 @@
-# document-template
-Template for Read the Docs + mkdocs
+# Resource Discovery
+
+EOEPCA Resource Discovery Building Block repository
