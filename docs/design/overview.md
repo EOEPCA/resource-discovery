@@ -1,3 +1,3 @@
 # Architecture
 
-Subcomponent architecture and interfaces.
+![Resource Discovery architecture](../img/resource-discovery-architecture.png)
