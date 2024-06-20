@@ -17,7 +17,7 @@ The _Resource Discovery_ Building Block functions as follows:
 - **Federation support**: all discovery APIs provide the ability to search for resources from other platforms at runtime
 - **Notification support**: all discovery APIs provide the ability to send event driven notifications upon updates to their underlying metadata repositories, as well as subscription to events from other components (e.g., registration of metadata from an output of a processing job)
 - **Integration with authentication and authorization**: all discovery APIs integrates with Identify and Access Management (IAM) servvices to secure protected resources.
-- **- Administration User Interface**: TODO
+- ** Administration User Interface**: TODO
 
 ## Capabilities
 

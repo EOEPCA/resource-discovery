@@ -13,7 +13,8 @@ nav:
       - getting-started/more-getting-started.md
     - Design:
       - design/overview.md
-      - design/more-design.md
+      - design/resource-and-data-catalogue.md
+      - design/data-catalogue.md
     - Usage:
       - usage/tutorials.md
       - usage/howtos.md
