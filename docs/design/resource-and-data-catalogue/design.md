@@ -4,21 +4,21 @@
 pycsw is an official OSGeo Project, is certified OGC-compliant, and an OGC Reference Implementation2. It is used in mission critical 24/7 production environments. Current deployments are listed in [https://pycsw.org/community/] and [https://github.com/geopython/pycsw/wiki/Live-Deployments]. pycsw was deployed as the Resource Catalogue for the EOEPCA project. All contributions and development were accepted into the upstream OSGeo project.
 
 Features of pycsw include:
-- Certified OGC Compliant and OGC Reference Implementation for both CSW 2.0.2 and CSW 3.0.0
-- Implements several OGC standards, such as API - Records - Part 1: Core, API - Features - Part 3: Filtering, API - Features - Part 4: Create, Replace, Update and Delete, Common Query Language (CQL2), OpenSearch Geo and Time Extensions
-- Implements STAC API 1.0.0
-- Harvesting support for OGC standards, such as WMS, WFS, WCS, WPS, WAF, CSW, SOS, and implements the Open Archives Initiative Protocol standard
-- Implements INSPIRE Discovery Services 3.0, ISO Metadata Application Profile 1.0.0, FGDC CSDGM Application Profile for CSW 2.0
-- Implements full text search capabilities
-- Supports ISO, Dublin Core, DIF, FGDC, Atom, GM03 and DataCite metadata models
-- Deployment via CGI, WSGI, and Helm Charts
-- Can be deployed standalone or implemented in other services via a Python API
-- Simple YAML configuration
-- Transactional capabilities (OGC API - Records and CSW-T)
-- Flexible repository configuration
-- Connectivity to GeoNode, HHypermap, Open Data Catalog, CKAN
-- Federated catalogue distributed searching
-- Realtime XML Schema validation
-- Extensible profile plugin architecture
+ - Certified OGC Compliant and OGC Reference Implementation for both CSW 2.0.2 and CSW 3.0.0
+ - Implements several OGC standards, such as API - Records - Part 1: Core, API - Features - Part 3: Filtering, API - Features - Part 4: Create, Replace, Update and Delete, Common Query Language (CQL2), OpenSearch Geo and Time Extensions
+ - Implements STAC API 1.0.0
+ - Harvesting support for OGC standards, such as WMS, WFS, WCS, WPS, WAF, CSW, SOS, and implements the Open Archives Initiative Protocol standard
+ - Implements INSPIRE Discovery Services 3.0, ISO Metadata Application Profile 1.0.0, FGDC CSDGM Application Profile for CSW 2.0
+ - Implements full text search capabilities
+ - Supports ISO, Dublin Core, DIF, FGDC, Atom, GM03 and DataCite metadata models
+ - Deployment via CGI, WSGI, and Helm Charts
+ - Can be deployed standalone or implemented in other services via a Python API
+ - Simple YAML configuration
+ - Transactional capabilities (OGC API - Records and CSW-T)
+ - Flexible repository configuration
+ - Connectivity to GeoNode, HHypermap, Open Data Catalog, CKAN
+ - Federated catalogue distributed searching
+ - Realtime XML Schema validation
+ - Extensible profile plugin architecture
 
 
