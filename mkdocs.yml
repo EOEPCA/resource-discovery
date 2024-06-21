@@ -8,23 +8,27 @@ nav:
   - System Architecture: https://eoepca.readthedocs.io/projects/architecture/
   - Resource Discovery:
     - index.md
-    - Getting Started:
-      - getting-started/quick-start.md
-      - getting-started/more-getting-started.md
+#    - Getting Started:
+#      - getting-started/quick-start.md
+#      - getting-started/more-getting-started.md
     - Design:
-      - design/overview.md
-      - design/resource-and-data-catalogue.md
-      - design/data-catalogue.md
-    - Usage:
-      - usage/tutorials.md
-      - usage/howtos.md
-    - Administration:
-      - admin/configuration.md
-      - admin/maintenance.md
-    - API:
-      - api/endpoint-specification.md
-      - api/usage.md
-
+      - Architecture: design/overview.md
+      - Resource and Data Catalogue:
+        - Design: design/resource-and-data-catalogue/design.md
+        - API:
+          - design/resource-and-data-catalogue/api/endpoint-specification.md
+          - design/resource-and-data-catalogue/api/usage.md
+      - Data Catalogue:
+        - Design: design/data-catalogue/design.md
+        - API:
+          - design/data-catalogue/api/endpoint-specification.md
+          - design/data-catalogue/api/usage.md
+#    - Usage:
+#      - usage/tutorials.md
+#      - usage/howtos.md
+#    - Administration:
+#      - admin/configuration.md
+#      - admin/maintenance.md
 theme:
   # name: mkdocs
   # name: readthedocs
