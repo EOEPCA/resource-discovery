@@ -16,8 +16,8 @@ The _Resource Discovery_ Building Block functions as follows:
 - **Transactional support**: all discovery APIs provide the ability to create, replace, update and delete resources
 - **Federation support**: all discovery APIs provide the ability to search for resources from other platforms at runtime
 - **Notification support**: all discovery APIs provide the ability to send event driven notifications upon updates to their underlying metadata repositories, as well as subscription to events from other components (e.g., registration of metadata from an output of a processing job)
-- **Integration with authentication and authorization**: all discovery APIs integrates with Identify and Access Management (IAM) servvices to secure protected resources.
-- **Administration User Interface**: TODO
+- **Integration with authentication and authorization**: all discovery APIs integrates with Identify and Access Management (IAM) services to secure protected resources.
+- **Administration User Interface**: Web-enabled UI providing administrative access to the capabilities of the Resource Discovery Building Block
 
 ## Capabilities
 
@@ -29,4 +29,4 @@ It comprises the following key components, each addressing specific aspects of p
 
 - **Resource Catalogue**: provides core resource discovery of local and remote resources
 - **Dataset Catalogue**: provides dataset granule discovery of local and remote dataset granules
-- **API Gateway**: TODO
+- **API Gateway**: protects all APIs and connects to the Identity Management building block for authentication and authorization.
