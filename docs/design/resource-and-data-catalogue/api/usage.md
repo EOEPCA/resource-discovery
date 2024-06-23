@@ -129,13 +129,13 @@ with fixed elements in the `properties` object/block.
 
 ### Example
 
-This [demonstration server](https://demo.pygeoapi.io/master) publishes metadata geospatial data through an interface that conforms to OGC API - Records.
+This [demonstration server](https://demo.pycsw.org/cite) publishes metadata geospatial data through an interface that conforms to OGC API - Records.
 
-An example request that can be used to retrieve data from the Sample metadata records from Dutch Nationaal georegister record collection is <https://demo.pygeoapi.io/master/collections/dutch-metadata?f=html>
+An example request that can be used to retrieve data from the pycsw OGC CITE instance is <https://demo.pycsw.org/cite/collections/metadta:main?f=html>
 
 Note that the response to the request is HTML in this case.
 
-Alternatively, the same data can be retrieved in GeoJSON format, through the request <https://demo.pygeoapi.io/master/collections/dutch-metadata?f=json>
+Alternatively, the same data can be retrieved in GeoJSON format, through the request <https://demo.pycsw.org/cite/collections/metadata:main?f=json>
 
 A client application can then retrieve the GeoJSON document and display or process it.
 
@@ -167,35 +167,60 @@ OGC API - Records collection descriptions provide the following additional prope
 - A required type for the collection
 - A required indicator about the type of the items in the collection (`record`)
 
-Below is an extract from the response to the request <https://demo.pygeoapi.io/master/collections?f=json>
+Below is an extract from the response to the request <https://demo.pycsw.org/cite/collections?f=json>
 illustrating a single record collection:
 
 ```json
 {
-    "id": "dutch-metadata",
-    "type": "Catalog",
-    "itemType": "record",
-    "title": "Sample metadata records from Dutch Nationaal georegister",
-    "description": "Sample metadata records from Dutch Nationaal georegister",
-    "keywords":[
-        "netherlands",
-        "open data",
-        "georegister"
-    ],
-    "links":[
-        {
-            "type": "application/json",
-            "rel": "self",
-            "title": "This document as JSON",
-            "href": "https://demo.pygeoapi.io/master/collections/dutch-metadata?f=json"
-        },
-        {
-            "type": "application/geo+json",
-            "rel": "items",
-            "title": "items as GeoJSON",
-            "href": "https://demo.pygeoapi.io/master/collections/dutch-metadata/items?f=json"
-        }
-    ]
+  "id": "metadata:main",
+  "title": "pycsw OGC CITE demo and Reference Implementation",
+  "description": "pycsw is an OARec and OGC CSW server implementation written in Python. pycsw fully implements the OGC API - Records and OpenGIS Catalogue Service Implementation Specification (Catalogue Service for the Web). Initial development started in 2010 (more formally announced in 2011). The project is certified OGC Compliant, and is an OGC Reference Implementation. Since 2015, pycsw is an official OSGeo Project. pycsw allows for the publishing and discovery of geospatial metadata via numerous APIs (CSW 2/CSW 3, OpenSearch, OAI-PMH, SRU). Existing repositories of geospatial metadata can also be exposed, providing a standards-based metadata and catalogue component of spatial data infrastructures. pycsw is Open Source, released under an MIT license, and runs on all major platforms (Windows, Linux, Mac OS X)",
+  "itemType": "record",
+  "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/json",
+      "title": "This document as JSON",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main?f=json",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "alternate",
+      "type": "text/html",
+      "title": "This document as HTML",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main?f=html",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "items",
+      "type": "application/geo+json",
+      "title": "items as GeoJSON",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main/items?f=json",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "items",
+      "type": "text/html",
+      "title": "items as HTML",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main/items?f=html",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "http://www.opengis.net/def/rel/ogc/1.0/queryables",
+      "type": "application/schema+json",
+      "title": "Queryables as JSON",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main/queryables?f=json",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "http://www.opengis.net/def/rel/ogc/1.0/queryables",
+      "type": "text/html",
+      "title": "Queryables as HTML",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main/queryables?f=html",
+      "hreflang": "en-US"
+    }
+  ]
 }
 ```
 
@@ -209,123 +234,89 @@ for a detailed initial explanation, as well as the [Records collections](#record
 Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](features.md#features) deep dive
 for a detailed explanation.
 
-Below is an extract from the response to the request <https://demo.pygeoapi.io/master/collections/dutch-metadata/items?f=json>
+Below is an extract from the response to the request <https://demo.pycsw.org/cite/collections/metadata:main/items?f=json>
 
 ```json
 {
   "type": "FeatureCollection",
-  "numberMatched": 308,
-  "numberReturned": 10,
   "features": [
     {
-      "id": "35149dfb-31d3-431c-a8bc-12a4034dac48",
+      "id": "urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f",
       "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              4.690751953125,
-              52.358740234375
-            ],
-            [
-              4.690751953125,
-              52.6333984375
-            ],
-            [
-              5.020341796875,
-              52.6333984375
-            ],
-            [
-              5.020341796875,
-              52.358740234375
-            ],
-            [
-              4.690751953125,
-              52.358740234375
-            ]
-          ]
-        ]
-      },
+      "geometry": null,
+      "time": null,
       "properties": {
-        "created": "2021-12-08",
-        "updated": "2022-06-10T01:27:47Z",
-        "type": "dataset",
-        "title": "Kaartboeck 1635",
-        "description": "Data uit kaartboeken van de periode 1635 tot 1775. De kaartboeken werden door het waterschap gebruikt om er op toe te zien dat de eigenaren geen water in beslag namen door demping.\nDe percelen op de kaart zijn naar de huidige maatstaven vrij nauwkeurig gemeten en voorzien van een administratie met de eigenaren. bijzondere locaties van molens werven en beroepen worden in de boeken vermeld. Alle 97 kaarten aan een geven een zeer gedetailleerd beeld van de Voorzaan, Nieuwe Haven en de Achterzaan. De bladen Oost en West van de zaan zijn vrij nauwkeurig. De bladen aan de Voorzaan zijn een schetsmatige weergave van de situatie. De kaart van de Nieuwe Haven si weer nauwkeurig te noemen.",
-        "providers": [
-          "Team Geo, geo-informatie@zaanstad.nl, Gemeente Zaanstad"
+        "themes": [],
+        "updated": "2021-02-15T21:39:18Z",
+        "type": "http://purl.org/dc/dcmitype/Image",
+        "title": "Lorem ipsum",
+        "description": "Quisque lacus diam, placerat mollis, pharetra in, commodo sed, augue. Duis iaculis arcu vel arcu.",
+        "formats": [
+          "image/svg+xml"
         ],
-        "externalIds": [
-          {
-            "scheme": "default",
-            "value": "35149dfb-31d3-431c-a8bc-12a4034dac48"
-          }
-        ],
-        "themes": [
-          {
-            "concepts": [
-              "ARGEOLOGIE",
-              "MONUMENTEN",
-              "KADASTER",
-              "KAARTBOEK",
-              "KAARTBOECK",
-              "HISTORIE"
-            ]
-          }
-        ],
-        "extent": {
-          "spatial": {
-            "bbox": [
-              [
-                4.690751953125,
-                52.358740234375,
-                5.020341796875,
-                52.6333984375
-              ]
-            ],
-            "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
-          },
-          "temporal": {
-            "interval": [
-              null,
-              null
-            ],
-            "trs": "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian"
-          }
-        }
+        "keywords": [
+          "Tourism--Greece"
+        ]
       },
       "links": [
         {
-          "href": "https://maps-intern.zaanstad.gem.local/geoserver/wms?SERVICE=WMS",
-          "rel": "item",
-          "title": "geo:kaartboeck",
-          "type": "OGC:WMS"
+          "rel": "self",
+          "type": "application/geo+json",
+          "title": "urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f",
+          "name": "item",
+          "description": "urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f",
+          "href": "https://demo.pycsw.org/cite/collections/metadata:main/items/urn:uuid:19887a8a-f6b0-4a63-ae56-7fba0e17801f"
         },
         {
-          "href": "https://maps-intern.zaanstad.gem.local/geoserver/wfs?SERVICE=WFS",
-          "rel": "item",
-          "title": "geo:kaartboeck",
-          "type": "OGC:WFS"
-        },
-        {
-          "href": "https://maps-intern.zaanstad.gem.local/geoserver/wfs?SERVICE=WFS&version=1.0.0&request=GetFeature&typeName=geo:kaartboeck&outputFormat=csv",
-          "rel": "item",
-          "type": "download"
-        },
-        {
-          "href": "https://maps-intern.zaanstad.gem.local/geoserver/wfs?SERVICE=WFS&version=1.0.0&request=GetFeature&typeName=geo:kaartboeck&outputFormat=shape-zip",
-          "rel": "item",
-          "type": "download"
+          "rel": "collection",
+          "type": "application/json",
+          "title": "Collection",
+          "name": "collection",
+          "description": "Collection",
+          "href": "https://demo.pycsw.org/cite/collections/metadata:main"
         }
       ]
     }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/geo+json",
+      "title": "This document as GeoJSON",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main/items?limit=1&f=json",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "alternate",
+      "type": "text/html",
+      "title": "This document as HTML",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main/items?limit=1&f=html",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "title": "Collection URL",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main",
+      "hreflang": "en-US"
+    },
+    {
+      "rel": "next",
+      "type": "application/geo+json",
+      "title": "items (next)",
+      "href": "https://demo.pycsw.org/cite/collections/metadata:main/items?limit=1&offset=1",
+      "hreflang": "en-US"
+    }
+  ],
+  "numberMatched": 12,
+  "numberReturned": 1
+}
 ```
 
 Note that this document is a valid GeoJSON document.
 
 OGC API - Records supports the same query parameters as specified in OGC API - Features.  In addition, OGC API - Records adds a set of core, fixed
-queryables.  An example query based on a "search engine" style search using the **q** parameter is <https://demo.pygeoapi.io/master/collections/dutch-metadata/items?f=json&q=biomassa>
+queryables.  An example query based on a "search engine" style search using the **q** parameter is <https://demo.pycsw.org/cite/collections/metadata:main/items?f=json&q=lorem>
 
 !!! note
     Consult the OGC API - Records - Part 1: Core specification for more information on core queryables.
