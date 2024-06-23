@@ -14,7 +14,7 @@ in additional parts. Capabilities for richer queries or to create, update or del
 records will be specified in additional parts.
 
 !!! note
-    OGC API - Records leverages [OGC API - Features](features.md#usage) as a baseline with similar
+    OGC API - Records leverages [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#usage) as a baseline with similar
     URL endpoints and request/response workflow, for the Searchable Catalog and Local.
 
 ### Background
@@ -143,22 +143,21 @@ A client application can then retrieve the GeoJSON document and display or proce
 
 ### Landing page
 
-Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](features.md#landing-page) deep dive
+Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#landing-page) deep dive
 for a detailed explanation.
 
 ### Conformance declarations
 
-Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](features.md#conformance-declarations) deep dive
-for a detailed explanation.
+Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#conformance-declarations) deep dive for a detailed explanation.
 
 ### API Definition
 
-Given OGC API - Records uses OGC API - Common as a building block, please see the [OGC API - Features](features.md#api-definition) deep dive
+Given OGC API - Records uses OGC API - Common as a building block, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#api-definition) deep dive
 for a detailed explanation of an example implementation.
 
 ### Records collections
 
-Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](features.md#feature-collections) deep dive
+Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#feature-collections) deep dive
 for a detailed initial explanation.
 
 OGC API - Records collection descriptions provide the following additional properties:
@@ -226,12 +225,12 @@ illustrating a single record collection:
 
 ### Records collection
 
-Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](features.md#feature-collection) deep dive
+Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#feature-collection) deep dive
 for a detailed initial explanation, as well as the [Records collections](#records-collections) description..
 
 ### Records access
 
-Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](features.md#features) deep dive
+Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#features) deep dive
 for a detailed explanation.
 
 Below is an extract from the response to the request <https://demo.pycsw.org/cite/collections/metadata:main/items?f=json>
@@ -324,7 +323,7 @@ queryables.  An example query based on a "search engine" style search using the 
 
 ### Record core
 
-Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](features.md#feature) deep dive
+Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#feature) deep dive
 for a detailed explanation.
 
 ## Summary
