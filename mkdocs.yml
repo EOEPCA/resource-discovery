@@ -23,7 +23,8 @@ nav:
           - Design: design/data-catalogue/design.md
           - API:
             - design/data-catalogue/api/endpoint-specification.md
-            - design/data-catalogue/api/usage.md
+            - Usage:
+              - design/data-catalogue/api/usage/stac-query-python-httpx.ipynb
   - Data Access: https://eoepca.readthedocs.io/projects/data-access/
 #    - Usage:
 #      - usage/tutorials.md
@@ -65,6 +66,7 @@ plugins:
   - autorefs
   - search
   - swagger-ui-tag
+  - mkdocs-jupyter
   # - pub-debugger:
   #     console_log:
   #       enabled: true
