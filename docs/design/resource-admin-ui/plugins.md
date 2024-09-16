@@ -13,6 +13,9 @@ but plugins could define their own widgets (in the form of a React component) to
 
 Below are some examples.
 
+!!! NOTE
+    The provided code examples are preliminary illustrations of the concepts and not necessarily complete.
+
 ## Simple example plugin
 
 ```javascript
