@@ -24,6 +24,9 @@ nav:
             - design/data-catalogue/api/endpoint-specification.md
             - Usage:
               - design/data-catalogue/api/usage/stac-query-python-httpx.ipynb
+      - Resource Administration UI:
+        - Design: design/resource-admin-ui/design.md
+        - Plugins: design/resource-admin-ui/plugins.md
   - Data Access: https://eoepca.readthedocs.io/projects/data-access/
 #    - Usage:
 #      - usage/tutorials.md
