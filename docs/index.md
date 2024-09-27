@@ -21,8 +21,6 @@ The _Resource Discovery_ Building Block functions as follows:
 
 ## Capabilities
 
-The _Resource Discovery Building Block_ provides the following capabilties:
-
 The relevant use cases for the Resource Discovery Building Block focus on the discovery of resources from local and distributed platforms.
 
 It comprises the following key components, each addressing specific aspects of processing in EO:
