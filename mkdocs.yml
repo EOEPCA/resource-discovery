@@ -13,12 +13,12 @@ nav:
     - Design:
       - Architecture: design/overview.md
       - Catalog Components:
-        - pycsw as Resource and Data Catalogue:
+        - Resource and Data Catalogue (pycsw):
           - Design: design/resource-and-data-catalogue/design.md
           - API:
             - design/resource-and-data-catalogue/api/endpoint-specification.md
             - design/resource-and-data-catalogue/api/usage.md
-        - eoAPI as Data Catalogue:
+        - Data Catalogue (eoAPI):
           - Design: design/data-catalogue/design.md
           - API:
             - design/data-catalogue/api/endpoint-specification.md
