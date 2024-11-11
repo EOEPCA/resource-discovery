@@ -24,13 +24,14 @@ nav:
             - design/data-catalogue/api/endpoint-specification.md
             - Usage:
               - design/data-catalogue/api/usage/stac-query-python-httpx.ipynb
-  - Data Access: https://eoepca.readthedocs.io/projects/data-access/
-#    - Usage:
+    - Usage:
+      - usage/low-level-stac-ingestion-eoapi.md
 #      - usage/tutorials.md
 #      - usage/howtos.md
 #    - Administration:
 #      - admin/configuration.md
 #      - admin/maintenance.md
+  - Data Access: https://eoepca.readthedocs.io/projects/data-access/
 theme:
   # name: mkdocs
   # name: readthedocs
