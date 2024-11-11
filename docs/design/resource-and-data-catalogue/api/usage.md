@@ -26,9 +26,8 @@ records will be specified in additional parts.
 
 > Versions
 
-  **OGC API - Records - Part 1: Core** is currently in draft and is planned to be
-  submitted to the OGC Architecture Board (OAB) in December 2023 for public review
-  in Q1 2024.
+  **OGC API - Records - Part 1: Core** has been submitted to the OGC Architecture Board (OAB)
+  and has completed public review stage. It is expected to be finalized in Q4 2024.
 
 > Test suite
 
@@ -325,6 +324,10 @@ queryables.  An example query based on a "search engine" style search using the 
 
 Given OGC API - Records uses OGC API - Common and OGC API - Features as building blocks, please see the [OGC API - Features](https://ogcapi-workshop.ogc.org/api-deep-dive/features/#feature) deep dive
 for a detailed explanation.
+
+### GeoJSON
+
+The OGC API - Records GeoJSON Requirements Class specifies a GeoJSON based encoding for Record core, based on RFC7946.  Given the ubiquity of GeoJSON, numerous tools exist to validate process and decode/encode GeoJSON, making OGC API - Records GeoJSON easy to include in metadata processing pipelines.  OGC API - Records includes the [JSON Schema](https://github.com/opengeospatial/ogcapi-records/blob/master/core/openapi/schemas/recordGeoJSON.yaml) for the GeoJSON representation and thus can be used for runtime or offline validation of metadata payloads.  Applications based on OGC API - Reocrds GeoJSON can extend and constrain the schema accordingly for domain specific workflows.
 
 ## Summary
 
