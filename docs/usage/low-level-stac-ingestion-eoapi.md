@@ -4,8 +4,8 @@ In addition to higher-level and user-friendly interfaces, there is a basic mecha
 
 ## Use the ingestion script and Makefile
 
-eoAPI-k8s includes a [script](https://github.com/developmentseed/eoapi-k8s/blob/960435300f04e8742e71d22ff4873ef95d60dad7/ingest.sh) which is also
-referenced in the project's [Makefile](https://github.com/developmentseed/eoapi-k8s/blob/960435300f04e8742e71d22ff4873ef95d60dad7/Makefile), for convenience.
+eoAPI-k8s includes a [script](https://github.com/developmentseed/eoapi-k8s/blob/main/ingest.sh) which is also
+referenced in the project's [Makefile](https://github.com/developmentseed/eoapi-k8s/blob/main/Makefile), for convenience.
 
 If you pulled the project, e.g. with `git clone https://github.com/developmentseed/eoapi-k8s.git`, you will have both available to you.
 
