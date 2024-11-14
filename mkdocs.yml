@@ -27,13 +27,9 @@ nav:
       - Resource Administration UI:
         - Design: design/resource-admin-ui/design.md
         - Plugins: design/resource-admin-ui/plugins.md
+    - Usage:
+      - usage/low-level-stac-ingestion-eoapi.md
   - Data Access: https://eoepca.readthedocs.io/projects/data-access/
-#    - Usage:
-#      - usage/tutorials.md
-#      - usage/howtos.md
-#    - Administration:
-#      - admin/configuration.md
-#      - admin/maintenance.md
 theme:
   # name: mkdocs
   # name: readthedocs
