@@ -6,10 +6,10 @@ maintain metadata and configuration.
 Our vision is a unified interface for the platform operators where the different building block (BB) capabilities (in particular,
 Resource Discovery and Data Access) can be administrated seamlessly and thus is split between the different building blocks.
 
-## STAC and OGC API Records
+## STAC and OGC API - Records
 
-The admin interface supports both [STAC API](https://stacspec.org/) and [OGC API Records](https://ogcapi.ogc.org/records/). The two standards are converging and, with some small deviations, 
-STAC is basically a rendtition of OGC API Records with more required properties tailored to spatio-temporal data assets, while OGC API Records
+The admin interface supports both [STAC API](https://stacspec.org/) and [OGC API - Records](https://ogcapi.ogc.org/records/). The two standards are converging and, with some small deviations,
+STAC is basically a rendtition of OGC API - Records with more required properties tailored to spatio-temporal data assets, while OGC API - Records
 is more generic and therefore a more natural choice for non-spatio-temporal data such as documents and workflow definitions. 
 For a comprehensive comparison, see this [STAC Spec document](https://github.com/radiantearth/stac-api-spec/blob/bab9bdf22b54cd119e931859b0da13f42091abb8/PRINCIPLES.md).
 
@@ -27,7 +27,7 @@ The below figures are preliminary design wireframes.
 ## Version 1 - transactions and STAC extensions
 
 In its first version, the interface will support transactional / atomic metadata changes, i.e. create, read, update, and delete (CRUD)
-operations, on individual metadata items (STAC / OGC API Records collections or STAC items).
+operations, on individual metadata items (STAC / OGC API - Records collections or STAC items).
 
 The web application makes use of the Transactions API of both eoAPI and pycsw, a REST API interface that is already available in both software packages.
 
