@@ -27,7 +27,7 @@ jobs:
       - name: Push prod to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          tags: eoepca/stac-manager-dev
+          tags: eoepca/stac-manager-prod
           secrets: |
             id=keycloak_url,src=${{ secrets.KEYCLOAK_URL }}
             id=keycloak_realm,src=${{ secrets.KEYCLOAK_REALM }}
