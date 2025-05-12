@@ -1,0 +1,36 @@
+name: Build and publish Docker image
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - "*"
+  pull_request:
+    branches: [ master ]
+jobs:
+  push_to_registry:
+    name: Build and push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push dev to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          tags: eoepca/stac-manager-dev
+          build-args: |
+            PRIMARY_COLOR='#005ACD',SECONDARY_COLOR='#048A81',STAC_API_URL='https://eoapi.develop.eoepca.org/stac'
+      - name: Push prod to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          tags: eoepca/stac-manager-dev
+          secrets: |
+            id=keycloak_url,src=${{ secrets.KEYCLOAK_URL }}
+            id=keycloak_realm,src=${{ secrets.KEYCLOAK_REALM }}
+            id=keycloak_client_id,src=${{ secrets.KEYCLOAK_CLIENT_ID }}
+          build-args: |
+            PRIMARY_COLOR='#005ACD',SECONDARY_COLOR='#048A81',STAC_API_URL='https://eoapi.develop.eoepca.org/stac'
