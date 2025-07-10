@@ -13,24 +13,23 @@ nav:
     - Design:
       - Architecture: design/overview.md
       - Catalog Components:
-        - pycsw as Resource and Data Catalogue:
+        - Resource and Data Catalogue (pycsw):
           - Design: design/resource-and-data-catalogue/design.md
           - API:
             - design/resource-and-data-catalogue/api/endpoint-specification.md
             - design/resource-and-data-catalogue/api/usage.md
-        - eoAPI as Data Catalogue:
+        - Data Catalogue (eoAPI):
           - Design: design/data-catalogue/design.md
           - API:
             - design/data-catalogue/api/endpoint-specification.md
             - Usage:
               - design/data-catalogue/api/usage/stac-query-python-httpx.ipynb
+      - Resource Administration UI:
+        - Design: design/resource-admin-ui/design.md
+        - Plugins: design/resource-admin-ui/plugins.md
+    - Usage:
+      - usage/low-level-stac-ingestion-eoapi.md
   - Data Access: https://eoepca.readthedocs.io/projects/data-access/
-#    - Usage:
-#      - usage/tutorials.md
-#      - usage/howtos.md
-#    - Administration:
-#      - admin/configuration.md
-#      - admin/maintenance.md
 theme:
   # name: mkdocs
   # name: readthedocs

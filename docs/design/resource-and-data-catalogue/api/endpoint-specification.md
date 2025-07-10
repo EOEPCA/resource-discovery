@@ -1,5 +1,8 @@
 # Specification
 
+# OpenAPI/Swagger description
+<swagger-ui src="https://resource-catalogue.develop.eoepca.org/openapi"/>
+
 # Endpoints
 
 ## OGC API - Records

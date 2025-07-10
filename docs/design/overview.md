@@ -21,7 +21,7 @@ As described in the [System Architecture document](https://eoepca.readthedocs.io
 
 The components design of the Resource Discovery Building Block is shown in the following component figure.
 
-The software pycsw is deployed as Resource Catalogue for all kinds of resources providing OGC API Records, STAC API (as well as OGC CSW, OpenSearch Geo/Time) and connection to the external automation & notification building block supporting the publish-subscribe (PubSub) mechanism.
+The software pycsw is deployed as Resource Catalogue for all kinds of resources providing OGC API - Records, STAC API (as well as OGC CSW, OpenSearch Geo/Time) and connection to the external automation & notification building block supporting the publish-subscribe (PubSub) mechanism.
 
 The Resource Catalogue is focusing on collection metadata as well as resource types, such as workflows, algorithms, job results, services, web applications, Jupyter notebooks, and documentation.
 
@@ -29,7 +29,7 @@ eoAPI is used as Data Catalogue in addition to pycsw providing STAC API and conn
 
 Both components are deployed by default with PostgreSQL as a backend. In the roadmap of EOEPCA, support for Elasticsearch as a backend will be implemented. In this setup, collection metadata from the eoAPI-based data catalogue are registered into pycsw (e.g., using the PubSub mechanism) so that the resource catalogue provide a high-level overview of all resources. Operators of the platform may choose to implement one or both of the catalogue components, depending on their requirements.
 
-The web-based administration interface is based on STAC Admin, EOxElements, and STAC Browser allowing for editing STAC and OGC API Records metadata amongst other functionalities.
+The web-based administration interface is based on STAC Admin, EOxElements, and STAC Browser allowing for editing STAC and OGC API - Records metadata amongst other functionalities.
 
 All APIs are protected with the Tyk-based API Gateway, which connects to the Identity Management building block for authentication and authorization. In addition, Tyk is able to cache requests and conduct rate-limiting.
 
