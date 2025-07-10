@@ -1,6 +1,6 @@
 # Specification
 
-The below API specifications are dynamically rendered from the OpenAPI definition of a demo deployment of eoAPI at [eoapi.dev](https://eoapi.dev/). Once available, we will link to a live EOEPCA building block instead.
+The below API specifications are dynamically rendered from the OpenAPI definition our development environment. They are provided here for reference and testing purposes.
 
 ## STAC API
 
