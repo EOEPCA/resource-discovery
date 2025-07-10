@@ -4,8 +4,8 @@ The below API specifications are dynamically rendered from the OpenAPI definitio
 
 ## STAC API
 
-OpenAPI definition: [https://stac.eoapi.dev/openapi.json](https://stac.eoapi.dev/openapi.json)
+OpenAPI definition: [https://eoapi.apx.develop.eoepca.org/stac/api](https://eoapi.apx.develop.eoepca.org/stac/api)
 
-Rendered version: [https://stac.eoapi.dev/docs](https://stac.eoapi.dev/docs)
+Rendered version: [https://eoapi.apx.develop.eoepca.org/stac/api.html](https://eoapi.apx.develop.eoepca.org/stac/api.html)
 
-<swagger-ui src="https://stac.eoapi.dev/openapi.json">
+<swagger-ui src="https://eoapi.apx.develop.eoepca.org/stac/api">
