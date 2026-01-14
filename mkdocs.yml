@@ -20,6 +20,8 @@ nav:
             - design/resource-and-data-catalogue/api/usage.md
         - Data Catalogue (eoAPI):
           - Design: design/data-catalogue/design.md
+          - Management:
+            - design/data-catalogue/management/load-testing.md
           - API:
             - design/data-catalogue/api/endpoint-specification.md
             - Usage:

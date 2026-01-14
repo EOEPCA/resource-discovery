@@ -8,4 +8,4 @@ eoAPI provides scripts to automated load testing, in particular:
 - Flexible Reporting: Console output + JSON export for CI/CD
 - Multiple Test Scenarios: Stress, normal, chaos, and autoscaling tests
 
-Read more at https://github.com/developmentseed/eoapi-k8s/blob/main/tests/load/README.md
+Read more in the [eoAPI docs on load testing](https://github.com/developmentseed/eoapi-k8s/blob/main/tests/load/README.md).
