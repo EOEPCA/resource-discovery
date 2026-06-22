@@ -1,52 +1,130 @@
 # Design
 
 The web-based administration user interface allows operators and users of a resource catalogue to
-maintain metadata and configuration.
+maintain metadata and configuration. It is implemented as
+[STAC Manager](https://github.com/developmentseed/stac-manager).
 
-Our vision is a unified interface for the platform operators where the different building block (BB) capabilities (in particular,
-Resource Discovery and Data Access) can be administrated seamlessly and thus is split between the different building blocks.
+The long-term vision is a unified interface where platform operators can administer capabilities from
+multiple building blocks (BBs)—in particular Resource Discovery and Data Access—without switching tools.
+Responsibility for different catalogue types is expected to be shared across BBs rather than
+centralised in a single component.
 
 ## STAC and OGC API - Records
 
-The admin interface supports both [STAC API](https://stacspec.org/) and [OGC API - Records](https://ogcapi.ogc.org/records/). The two standards are converging and, with some small deviations,
-STAC is basically a rendtition of OGC API - Records with more required properties tailored to spatio-temporal data assets, while OGC API - Records
-is more generic and therefore a more natural choice for non-spatio-temporal data such as documents and workflow definitions. 
+The original design envisaged support for both [STAC API](https://stacspec.org/) and
+[OGC API - Records](https://ogcapi.ogc.org/records/). The two standards are converging and, with some
+small deviations, STAC is largely a rendition of OGC API - Records with more required properties
+tailored to spatio-temporal data assets, while OGC API - Records is more generic and therefore a more
+natural choice for non-spatio-temporal data such as documents and workflow definitions.
 For a comprehensive comparison, see this [STAC Spec document](https://github.com/radiantearth/stac-api-spec/blob/bab9bdf22b54cd119e931859b0da13f42091abb8/PRINCIPLES.md).
 
-The administration user interface will feature a branch between the two standards, giving users some context to make the choice between them, 
-based on the type of asset they want to edit / add.
+The administration user interface was planned to branch between the two standards, giving users context
+to choose based on the type of asset they want to edit or add. The current STAC Manager deployment
+covers STAC collections and items only; OGC API - Records administration remains part of the broader
+vision.
 
-The below figures are preliminary design wireframes.
+## Implementation: STAC Manager
 
-![Preliminary wireframe showing STAC collections](../../img/resource-admin-ui-wireframe-collections.png)
+The administration user interface is built on
+[STAC Manager](https://github.com/developmentseed/stac-manager), an open-source (MIT-licensed) web
+application from [Development Seed](https://developmentseed.org/) that lists, creates, reads, updates,
+and deletes STAC collections and items. It talks to a STAC API through the
+[STAC API - Transaction Extension](https://github.com/stac-api-extensions/transaction) and can be
+configured to use any OIDC-compliant identity provider for authentication. The application supports
+required STAC fields (v1.0.0) and is extensible through a [plugin system](plugins.md) that builds the
+editor forms, so support for STAC extensions (such as the [Render](https://github.com/stac-extensions/render)
+extension) and custom properties can be added without changing the core application.
 
-![Preliminary wireframe showing STAC collection overview](../../img/resource-admin-ui-wireframe-collection-overview.png)
+A reference deployment runs on the EOEPCA+ development cluster at
+[https://eoapi.develop.eoepca.org/manager/collections](https://eoapi.develop.eoepca.org/manager/collections).
+It is integrated with the EOEPCA+ Identity Management building block (Keycloak) for authentication and
+authorization, fronting the eoAPI STAC API.
 
+!!! NOTE
+    The screenshots below were taken from the development deployment and use demo content. The exact
+    collections, items, and styling may differ from a production instance.
 
+### Browsing the catalogue
 
-## Version 1 - transactions and STAC extensions
+Without signing in, users can browse the catalogue: list the available collections, search by title or
+description, and filter by keyword.
 
-In its first version, the interface will support transactional / atomic metadata changes, i.e. create, read, update, and delete (CRUD)
-operations, on individual metadata items (STAC / OGC API - Records collections or STAC items).
+![STAC Manager collections listing](../../img/stac-manager-collections.png)
 
-The web application makes use of the Transactions API of both eoAPI and pycsw, a REST API interface that is already available in both software packages.
+### Signing in
 
-All APIs are protected with the Tyk-based API Gateway, which connects to the Identity Management building block for authentication and authorization.
+Editing actions are gated behind authentication. Choosing **Login** (or attempting to reach a
+protected page such as the collection editor) redirects the user to the EOEPCA+ Identity Management
+building block, where they sign in with their account or a federated identity provider.
 
-The user interface will support all required STAC fields (for now v1.0.0) and be extenable through React-based frontend code plugins to support additional
-metadata as well, such as fields added by STAC extensions. A priority case of extensibility to support is the [Render](https://github.com/stac-extensions/render) extension.
+![EOEPCA+ IAM sign-in page](../../img/stac-manager-login.png)
 
+After signing in, editing actions become available. A **Create** action appears for adding new
+collections, and per-collection options for editing and deletion become available.
+
+![STAC Manager catalogue when signed in](../../img/stac-manager-catalog-loggedin.png)
+
+### Inspecting a collection
+
+Selecting a collection shows an overview of its metadata—description, temporal and spatial extent,
+license, and keywords—together with a paginated list of the items it contains.
+
+![STAC Manager collection overview](../../img/stac-manager-collection-overview.png)
+
+Drilling into an item shows its overview (parent collection, date, spatial extent) and the list of its
+assets.
+
+![STAC Manager item overview](../../img/stac-manager-item-overview.png)
+
+### Editing metadata
+
+Collection metadata can be edited through the plugin-driven form or raw JSON. Item-level browsing is
+supported; transactional item editing depends on deployment configuration and may not be enabled.
+
+The editor offers two complementary modes. The **Form** view is generated by the plugin system: each
+plugin (for example `CollectionsCore`, `Providers`) renders a section of fields with appropriate
+widgets and validation.
+
+![STAC Manager collection form editor](../../img/stac-manager-collection-edit.png)
+
+The **JSON** view exposes the raw STAC document for power users who prefer to edit the metadata
+directly. Changes made in either view are kept in sync and saved back to the STAC API via the
+Transaction Extension.
+
+![STAC Manager collection JSON editor](../../img/stac-manager-collection-edit-json.png)
+
+### Creating a collection
+
+The **Create** action opens the same plugin-driven editor with an empty document. Required fields
+(such as the collection identifier and description) are marked, and the form guides the user through
+core metadata, spatial and temporal extent, links, providers, and any enabled STAC extensions. On
+**Create**, the new collection is written to the STAC API via the Transaction Extension.
+
+![STAC Manager new collection form](../../img/stac-manager-collection-create.png)
+
+## Architecture and roadmap
+
+### Transactions and STAC extensions (current)
+
+The reference deployment uses the Transactions API of eoAPI. The broader platform design also envisages
+the same pattern for pycsw and OGC API - Records catalogues.
+
+All APIs are protected with the Tyk-based API Gateway, which connects to the EOEPCA+ Identity
+Management building block for authentication and authorization.
 
 ![Service connectivity using Transactions](../../img/resource-admin-ui-transactions.png)
 
+### Bulk ingestion and configuration (planned)
 
-## Version 2 - bulk ingestion and configuration
+A future version of the interface is expected to add mass import and export (for example via GeoParquet
+files). Numeric data file processing remains the responsibility of file managers such as the Workspace
+BB and dedicated ingestion services like
+[Resource Registration](https://eoepca.readthedocs.io/projects/resource-registration).
 
-In its second version, the interface will gain support for mass import/export using external GeoParquet files etc. While numeric data file processing
-is left to file managers like the Workspace BB and dedicated data ingestion services like the [Resource Registration](https://eoepca.readthedocs.io/projects/resource-registration) building block.
-
-Also CRUD operations will be routed through the [Resource Registration](https://eoepca.readthedocs.io/projects/resource-registration) building block.
+CRUD operations may also be routed through Resource Registration rather than calling catalogue
+Transactions APIs directly.
 
 ![Service connectivity using Resource Registration](../../img/resource-admin-ui-registration.png)
 
-Furthermore, features of resource collections should become configurable through the admin UI, such as (de-) activating data services for collections.
+Furthermore, features of resource collections should become configurable through the admin UI, such as
+(de-)activating data services for collections.

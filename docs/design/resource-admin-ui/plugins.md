@@ -1,20 +1,21 @@
 # Plugins
 
-The Resource Administration UI can be extended with a set of plugins that can be loaded to generate the editor.
-The below documentation describes the preliminary concepts and examples.
-
-Each plugin would be responsible for a section of the editor and would be able to define the fields that should be shown.
-This allows for a more modular approach to the editor. Each instance could use a different set of plugins to define the editor structure. 
-These could be custom plugins or plugins from the community.
-
-Drawing inspiration from the JSON schema spec, each plugin would define a schema to create the editor. 
-For each field type there would be a corresponding default widget to render it, 
-but plugins could define their own widgets (in the form of a React component) to be used by the fields.
-
-Below are some examples.
+The administration user interface is extended through plugins that generate the metadata editor. The
+examples below illustrate the design concepts from the original specification. They are realised in
+[STAC Manager](https://github.com/developmentseed/stac-manager) (see the [Design](design.md) page).
 
 !!! NOTE
-    The provided code examples are preliminary illustrations of the concepts and not necessarily complete.
+    For the authoritative, up-to-date plugin API, refer to the `@stac-manager/data-core`,
+    `@stac-manager/data-widgets`, and `@stac-manager/data-plugins` packages in the STAC Manager
+    repository. The code examples here are illustrative and may not match the current API exactly.
+
+Each plugin is responsible for a section of the editor and defines the fields that should be shown.
+This allows a modular editor layout: each deployment can load a different set of plugins—custom or
+from the community.
+
+Drawing inspiration from the JSON Schema spec, each plugin defines a schema that drives the editor.
+For each field type there is a corresponding default widget, but plugins can supply custom widgets
+(as React components) for specific fields.
 
 ## Simple example plugin
 
@@ -57,7 +58,7 @@ export class PluginMeta extends Plugin {
 
 ## More complicated example
 
-Something more complicated would include an async init function to get values needed for the plugin.
+A more complex plugin includes an async `init` function to fetch values needed at edit time.
 
 ```javascript
 export class PluginRender extends Plugin {
@@ -81,8 +82,8 @@ export class PluginRender extends Plugin {
 
 ## Configuration
 
-All this would be set up in a configuration file that would define the plugins to be used by the editor.
-The plugins could even be loaded dynamically depending on some condition.
+Plugins are registered in a configuration file that defines which plugins the editor loads. Plugins can
+be loaded dynamically depending on conditions such as the STAC extensions present on a record.
 
 ```javascript
 export const config = {
@@ -152,7 +153,7 @@ export class PluginRender extends Plugin {
 }
 ```
 
-Then the Widget:
+The corresponding widget:
 
 ```javascript
 export function RenderExtensionItemWidget(props) {
@@ -179,9 +180,9 @@ export function RenderExtensionItemWidget(props) {
 }
 ```
 
-`ObjectField` is the default widget for objects so basically we're adding a wrapper around it to show the map.
+`ObjectField` is the default widget for objects; this custom widget wraps it to add a map preview.
 
-Lastly, the configuration file would be used to generate the editor:
+The configuration file ties plugins and widgets together:
 
 ```javascript
 export const config = {
