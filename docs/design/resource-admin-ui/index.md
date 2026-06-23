@@ -19,7 +19,7 @@ to choose based on the type of asset they want to edit or add. The current STAC 
 covers STAC collections and items only; OGC API - Records administration remains part of the broader
 vision.
 
-## Implementation: STAC Manager
+## STAC Manager
 
 The administration user interface is built on
 [STAC Manager](https://github.com/developmentseed/stac-manager), an open-source (MIT-licensed) web
