@@ -1,23 +1,17 @@
 # Resource Administration UI
 
 The web-based administration UI lets platform operators and users maintain catalogue metadata and
-configuration. The long-term vision is a single interface for administering capabilities across
-multiple building blocks (BBs)—notably Resource Discovery and Data Access—with responsibility for
-catalogue types shared across BBs rather than centralised. The current implementation is described in
-[Implementation: STAC Manager](#implementation-stac-manager).
+configuration. It is built on [STAC Manager](#stac-manager), described below.
 
 ## STAC and OGC API - Records
 
-The original design envisaged support for both [STAC API](https://stacspec.org/) and
-[OGC API - Records](https://ogcapi.ogc.org/records/). The standards are converging: STAC is largely a
-rendition of OGC API - Records with additional required properties for spatio-temporal assets, while
-OGC API - Records is more generic and better suited to non-spatio-temporal data such as documents and
-workflow definitions. See the [STAC API principles document](https://github.com/radiantearth/stac-api-spec/blob/bab9bdf22b54cd119e931859b0da13f42091abb8/PRINCIPLES.md) for a detailed comparison.
+The platform supports both [STAC API](https://stacspec.org/) and
+[OGC API - Records](https://ogcapi.ogc.org/records/) for catalogue metadata. STAC focuses on
+spatio-temporal assets; OGC API - Records is more generic and suited to documents, workflows, and other
+resource types. See the [STAC API principles document](https://github.com/radiantearth/stac-api-spec/blob/bab9bdf22b54cd119e931859b0da13f42091abb8/PRINCIPLES.md) for a detailed comparison.
 
-The administration user interface was planned to branch between the two standards, giving users context
-to choose based on the type of asset they want to edit or add. The current STAC Manager deployment
-covers STAC collections and items only; OGC API - Records administration remains part of the broader
-vision.
+The administration UI covers STAC collections and items via STAC Manager. OGC API - Records catalogues
+(for example pycsw) are not administered through this interface.
 
 ## STAC Manager
 
@@ -29,8 +23,9 @@ STAC API through the
 STAC v1.0.0 required fields.
 
 STAC Manager can be configured to use any OIDC-compliant identity provider. In the EOEPCA+ reference
-deployment, authentication and authorization are handled by the Identity Management building block
-(Keycloak), with API access protected by the Tyk-based API Gateway in front of the eoAPI STAC API.
+deployment, users authenticate through the Identity Management building block (Keycloak). The eoAPI
+STAC API is protected by [STAC Auth Proxy](https://developmentseed.org/stac-auth-proxy/), which validates
+OIDC tokens and applies endpoint-level access policies.
 
 The application is extensible through a plugin system that builds the editor forms, so support for STAC
 extensions (such as the [Render](https://github.com/stac-extensions/render) extension) and custom
@@ -106,27 +101,40 @@ core metadata, spatial and temporal extent, links, providers, and any enabled ST
 
 ![STAC Manager new collection form](../../img/stac-manager-collection-create.png)
 
-## Architecture and roadmap
+## Architecture
 
-### Transactions and STAC extensions (current)
+STAC Manager is the browser-facing component of the administration UI. In the EOEPCA+ reference
+deployment it reaches the eoAPI-based Data Catalogue through STAC Auth Proxy. eoAPI provides the STAC
+API, including the
+[Transaction Extension](https://github.com/stac-api-extensions/transaction) for create, update, and
+delete operations.
 
-The reference deployment uses the Transactions API of eoAPI. The broader platform design also envisages
-the same pattern for pycsw and OGC API - Records catalogues. Authentication and API protection follow
-the integration described above (see [Implementation: STAC Manager](#implementation-stac-manager)).
+### Component connectivity
 
-![Service connectivity using Transactions](../../img/resource-admin-ui-transactions.png)
+- **STAC Manager** — web application used by operators; obtains OIDC tokens from the Identity
+  Management building block (Keycloak) when users sign in.
+- **STAC Auth Proxy** — reverse proxy in front of the eoAPI STAC API; validates OIDC tokens and
+  applies endpoint-level access policies before forwarding requests to eoAPI.
+- **eoAPI STAC API** — persists collection and item metadata in PostgreSQL and exposes it through
+  STAC API endpoints, including transactional operations.
 
-### Bulk ingestion and configuration (planned)
+Read operations (browse, search) may be available without authentication depending on deployment
+policy; write operations require a valid token.
 
-A future version of the interface is expected to add bulk import and export (for example via GeoParquet
-files). Numeric data file processing remains the responsibility of file managers such as the Workspace
-BB and dedicated ingestion services like
-[Resource Registration](https://eoepca.readthedocs.io/projects/resource-registration).
+### Catalogues in Resource Discovery
 
-CRUD operations may also be routed through Resource Registration rather than calling catalogue
-Transactions APIs directly.
+Resource Discovery deploys two catalogue components. STAC Manager targets the **Data Catalogue**
+(eoAPI), which maintains STAC collections and items for spatio-temporal datasets. The **Resource
+Catalogue** (pycsw) exposes OGC API - Records for broader resource types and is not connected to
+STAC Manager. See the [Resource Discovery architecture overview](../overview.md) for the full
+component layout.
 
-![Service connectivity using Resource Registration](../../img/resource-admin-ui-registration.png)
+Programmatic catalogue changes can also be made through the Resource Registration building block,
+which acts as a transactional client to both catalogue services.
 
-Resource collection features—such as (de-)activating data services—should also become configurable
-through the administration UI.
+### STAC extensions
+
+Transactional operations use the STAC API Transaction Extension regardless of which STAC fields or
+extensions a document contains. STAC Manager's plugin system (see [STAC Manager](#stac-manager))
+determines how those fields are presented in the editor; plugins do not change the API path, only the
+document shape sent to and received from eoAPI.
