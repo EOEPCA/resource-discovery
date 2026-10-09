@@ -27,4 +27,4 @@ It comprises the following key components, each addressing specific aspects of p
 
 - **Resource Catalogue**: provides core resource discovery of local and remote resources
 - **Dataset Catalogue**: provides dataset granule discovery of local and remote dataset granules
-- **API Gateway**: protects all APIs and connects to the Identity Management building block for authentication and authorization.
+- **Access Control**: decides who may read and write each collection in the Data Catalogue, based on logins from the Identity Management building block. See [Access Control](design/data-catalogue/auth.md).
