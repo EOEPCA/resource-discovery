@@ -25,7 +25,7 @@ STAC v1.0.0 required fields.
 STAC Manager can be configured to use any OIDC-compliant identity provider. In the EOEPCA+ reference
 deployment, users authenticate through the Identity Management building block (Keycloak). The eoAPI
 STAC API is protected by [STAC Auth Proxy](https://developmentseed.org/stac-auth-proxy/), which validates
-OIDC tokens and applies endpoint-level access policies.
+OIDC tokens and decides who may read and write each collection.
 
 The application is extensible through a plugin system that builds the editor forms, so support for STAC
 extensions (such as the [Render](https://github.com/stac-extensions/render) extension) and custom
@@ -114,12 +114,12 @@ delete operations.
 - **STAC Manager** — web application used by operators; obtains OIDC tokens from the Identity
   Management building block (Keycloak) when users sign in.
 - **STAC Auth Proxy** — reverse proxy in front of the eoAPI STAC API; validates OIDC tokens and
-  applies endpoint-level access policies before forwarding requests to eoAPI.
+  checks per collection who may read and write before forwarding requests to eoAPI.
 - **eoAPI STAC API** — persists collection and item metadata in PostgreSQL and exposes it through
   STAC API endpoints, including transactional operations.
 
-Read operations (browse, search) may be available without authentication depending on deployment
-policy; write operations require a valid token.
+Public collections can be browsed without signing in. Other collections, and all edits, need a login.
+See [Access Control](../data-catalogue/auth.md) for who can access what.
 
 ### Catalogues in Resource Discovery
 

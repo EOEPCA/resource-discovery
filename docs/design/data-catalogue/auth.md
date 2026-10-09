@@ -1,113 +1,97 @@
 # Access Control
 
-The STAC API of the Data Catalogue (eoAPI) is protected by [STAC Auth Proxy](https://github.com/developmentseed/stac-auth-proxy), which sits in front of the STAC API and enforces authentication and authorization for every request. The proxy validates OpenID Connect (OIDC) tokens issued by the [IAM Building Block](https://eoepca.readthedocs.io/projects/iam/) (Keycloak) and applies access policies by injecting [CQL2](https://docs.ogc.org/is/21-065r2/21-065r2.html) filters into requests before they reach the STAC API.
+The STAC API of the Data Catalogue (eoAPI) decides, collection by collection, who may read and who may write. This is done by [STAC Auth Proxy](https://github.com/developmentseed/stac-auth-proxy), which sits in front of the STAC API and checks every request.
 
-This approach was designed in [EOEPCA/resource-discovery#203](https://github.com/EOEPCA/resource-discovery/issues/203) and implemented in [EOEPCA/eoepca-plus#118](https://github.com/EOEPCA/eoepca-plus/pull/118).
-
-## Architecture
+## How it works
 
 ```
-Client (e.g. STAC Manager, pystac-client, curl)
-  │  Authorization: Bearer <OIDC token>   (optional for public reads)
+Client (STAC Manager, pystac-client, curl, ...)
+  │  sends a login token from Keycloak (not needed for public data)
   ▼
-STAC Auth Proxy ── validates JWT against IAM (Keycloak)
-  │                derives a CQL2 filter from the token claims
+STAC Auth Proxy  ── checks the token and works out what the caller may access
   ▼
-eoAPI STAC API (stac-fastapi-pgstac) ── applies the filter to every query
+eoAPI STAC API   ── returns only what the caller is allowed to see
 ```
 
-The proxy enforces policy through two mechanisms:
+- **Reading** (browsing, searching): the proxy adds a filter to the request, so the response only contains collections and items the caller may see.
+- **Writing** (create, update, delete): the proxy rejects the request if the caller may not write to that collection.
 
-- **Read requests** (`GET`, `HEAD`, `OPTIONS`, and `POST` to `/search`): the proxy appends a CQL2 filter to the query, so the STAC API only returns collections and items the caller may see.
-- **Write requests** (`POST`, `PUT`, `PATCH`, `DELETE` on collections and items): the proxy evaluates the same policy against the target collection and rejects the request if the caller lacks write access.
+The token comes from the [IAM Building Block](https://eoepca.readthedocs.io/projects/iam/) (Keycloak). The filters are [CQL2](https://docs.ogc.org/is/21-065r2/21-065r2.html) expressions built as structured data, so nothing in a token can change their meaning.
 
-Because the filter is generated as CQL2-JSON (a structured expression, not concatenated text), values taken from the token can never alter the shape of the query — there is no injection path from token claims into the filter.
+Some endpoints are always open: the landing page (`/`), the API description (`/api`, `/api.html`), `/conformance`, `/docs/oauth2-redirect`, and the health and metrics endpoints (`/healthz`, `/_mgmt/ping`, `/_mgmt/metrics`).
 
-A few endpoints are public and bypass authentication entirely: the landing page (`/`), the API description (`/api`, `/api.html`), `/conformance`, the OAuth2 redirect helper (`/docs/oauth2-redirect`), and the health endpoints (`/healthz`, `/_mgmt/ping`).
+## Who can access what
 
-## Policy model
+The collection ID decides access. Everything before the first `.` is the owner:
 
-Access is governed by an opinionated naming convention for collection IDs. A collection's ID prefix — the part before the first `.` — determines who can read and write it.
+| Collection ID       | Example                   | Who can read                                         | Who can write                           |
+| ------------------- | ------------------------- | ---------------------------------------------------- | --------------------------------------- |
+| No `.` in the ID    | `sentinel-2-l2a`          | Everyone, also without login                         | [Catalogue editors](#catalogue-editors) |
+| `<username>.<name>` | `alice.my-experiments`    | User `alice`                                         | User `alice`                            |
+| `<group-id>.<name>` | `pn56su-dss-0034.landsat` | Members of `pn56su-dss-0034` or `pn56su-dss-0034-ro` | Members of `pn56su-dss-0034`            |
 
-| Collection ID pattern        | Example                   | Read                                                       | Write                              |
-| ---------------------------- | ------------------------- | ---------------------------------------------------------- | ---------------------------------- |
-| No prefix (no `.` in the ID) | `sentinel-2-l2a`          | Everyone, including anonymous users                        | `stac_editor` role only            |
-| `<username>.<collection>`    | `alice.my-experiments`    | User `alice`                                               | User `alice`                       |
-| `<group>.<collection>`       | `pn56su-dss-0034.landsat` | Members of group `pn56su-dss-0034` or `pn56su-dss-0034-ro` | Members of group `pn56su-dss-0034` |
+Anything not covered by this table is denied.
 
-### Public collections
+### Users
 
-Any collection whose ID contains no `.` is public: anonymous and authenticated users alike can read it and its items. Only callers holding the [`stac_editor` role](#service-accounts-the-stac_editor-role) can create or modify public collections.
+Logged-in users can create as many collections as they like, as long as the ID starts with their username and a `.`. The username is taken from the token's `preferred_username` claim.
 
-### User collections
+### Groups
 
-An authenticated user can read and write any collection prefixed with their username (the `preferred_username` claim of their token) followed by a `.`. Users may create as many collections under their own prefix as they like.
+Group membership is taken from the token's `groups` claim. Only Keycloak groups shaped like `/dss/<group-id>` count, and `<group-id>` must contain `-dss-`:
 
-### Group collections
+- `/dss/pn56su-dss-0034`: read and write `pn56su-dss-0034.*` collections
+- `/dss/pn56su-dss-0034-ro`: read only
+- `/dss/pn56su-dss-0034-mgr`: no data access (this group is for storage management)
 
-Group permissions derive from the `groups` claim of the user's token. The policy recognizes group names of the form `/dss/<group-id>`, where `<group-id>` must contain `-dss-`:
+Usernames and group IDs only work as prefixes if they use letters, digits, `_` and `-`.
 
-- `/dss/pn56su-dss-0034` grants **read and write** access to collections prefixed `pn56su-dss-0034.`
-- `/dss/pn56su-dss-0034-ro` grants **read-only** access to the same collections
-- `/dss/pn56su-dss-0034-mgr` is ignored — the `-mgr` suffix denotes a storage-management role, which carries no data access rights
+!!! warning "Writing items means writing the collection"
+    Anyone who can add items to a collection can also edit or delete the collection itself.
 
-Groups that lack the `/dss/` prefix or the `-dss-` infix are ignored.
+### Catalogue editors
 
-!!! warning "Collection and item permissions are coupled"
-    Write access to a collection's items implies write access to the collection itself. A user who can add items to `pn56su-dss-0034.landsat` can also edit or delete that collection's metadata — and can create new collections under any prefix they hold.
+The `stac_editor` role lets a caller write to **every** collection, including public ones. It applies when:
 
-### Service accounts: the `stac_editor` role
+1. the token was issued by one of the trusted Keycloak clients listed in the proxy's `STAC_EDITOR_CLIENT_IDS` setting (checked through the token's `azp` claim), and
+2. the token carries the `stac_editor` role of one of those clients.
 
-Automated services such as the [Registration Harvester](https://eoepca.readthedocs.io/projects/resource-registration/) authenticate with client-credentials tokens, which carry no username or groups. For these callers the policy supports a write bypass: a token grants **unrestricted, catalog-wide write access** when both of the following hold:
+Two kinds of callers use it:
 
-1. The token was issued for one of the trusted client IDs, verified via the token's `azp` claim, and
-2. The token carries the `stac_editor` client role under `resource_access.<client>.roles`.
+- **People** who manage the catalogue. In the reference deployment, members of the Keycloak group `data-access-admin` get the role, for example when they log in to STAC Manager.
+- **Services** such as the [Registration Harvester](https://eoepca.readthedocs.io/projects/resource-registration/), which log in without a username or groups.
 
-The trusted clients and the role name are set via the proxy's `STAC_EDITOR_CLIENT_IDS` and `STAC_EDITOR_ROLE` environment variables; in the EOEPCA+ demo cluster the trusted clients are `eoapi` and `registration-harvester`. The role itself is assigned in Keycloak, so granting or revoking catalog-wide write access is an IAM operation — no redeployment involved. Each use of the bypass is audit-logged with the token's `azp`, `sub`, and `jti` claims.
+Granting or removing the role is done in Keycloak, without redeploying anything. Each use of the role is logged.
 
 !!! danger "Only trust confidential clients"
-    `STAC_EDITOR_CLIENT_IDS` must only list confidential clients whose role assignment is controlled by operators. Never list a public client where users can self-register, as the role check anchors on the token's issuing client.
+    List only confidential clients in `STAC_EDITOR_CLIENT_IDS`, never a client where users can sign themselves up.
 
-### Default deny
+## Clients
 
-A request that matches no policy is denied: an anonymous write, or an authenticated request against a collection outside the caller's username and group prefixes, receives a filter that matches nothing.
+Send the token with **every** request, not just when writing. Without a token you only see public collections.
 
-## Implementation
-
-The policy is implemented as custom [filter factories](https://developmentseed.org/stac-auth-proxy/user-guide/record-level-auth/#filter-contract) for STAC Auth Proxy, defined in [`eoepca_filters.py`](https://github.com/EOEPCA/eoepca-plus/blob/deploy-develop/argocd/eoepca/data-access/parts/stac-auth-proxy/eoepca_filters.py) in the `eoepca-plus` deployment repository and wired into the proxy via its `COLLECTIONS_FILTER_CLS` and `ITEMS_FILTER_CLS` settings in the [Helm values](https://github.com/EOEPCA/eoepca-plus/blob/deploy-develop/argocd/eoepca/data-access/parts/values/values-eoapi.yaml). The two filter factories share one policy implementation; they differ only in the property they filter on (`id` for collections, `collection` for items).
-
-A Kustomize `configMapGenerator` packages the policy file into a ConfigMap, which is mounted into the proxy container at runtime. Policy logic can therefore be changed by editing a single Python file in the deployment repository — no proxy image rebuild or chart upgrade is required. ArgoCD applies the updated ConfigMap, and the proxy pods load the new policy on their next restart.
-
-The policy logic is covered by a unit test suite ([`test_eoepca_filters.py`](https://github.com/EOEPCA/eoepca-plus/blob/deploy-develop/argocd/eoepca/data-access/parts/stac-auth-proxy/test_eoepca_filters.py)) that runs in CI on every change to the deployment repository. To run it locally:
-
-```bash
-uv run --with pytest --with pytest-asyncio --with cql2 \
-  pytest argocd/eoepca/data-access/parts/stac-auth-proxy/test_eoepca_filters.py
-```
-
-!!! note "Version requirement"
-    The custom filter factories require STAC Auth Proxy `v1.0.0` or later (the EOEPCA+ demo cluster deploys `v1.1.0`).
-
-## Client behavior
-
-Because read responses depend on the caller's identity, clients should send their OIDC token on **every** request to the STAC API — not only on writes. An unauthenticated `GET /collections` returns only public collections; the same request with a `Authorization: Bearer <token>` header additionally returns the caller's user and group collections.
-
-[STAC Manager](https://github.com/developmentseed/stac-manager) (the basis of the [Resource Administration UI](../resource-admin-ui/design.md)) follows this pattern as of `v1.0.0`: when a user is logged in, it attaches their token to all STAC API requests — collection listings, item searches, and transactions alike — so users see their private collections throughout the UI.
-
-Command-line and notebook users can do the same, e.g. with `pystac-client`:
+[STAC Manager](https://github.com/developmentseed/stac-manager), the basis of the [Resource Administration UI](../resource-admin-ui/index.md), does this automatically once you log in (from `v1.0.0`). With `pystac-client`:
 
 ```python
 from pystac_client import Client
 
 client = Client.open(
-    "https://eoapi.develop.eoepca.org/stac",
+    "https://eoapi.<your-domain>/stac",
     headers={"Authorization": f"Bearer {token}"},
 )
 ```
 
+To get a token and work with the STAC API from Python or the command line, see the [EOEPCA user client](https://eoepca.readthedocs.io/projects/user-client/).
+
+## Deployment
+
+To set this up on your own platform, follow the [Data Access deployment guide](https://eoepca.readthedocs.io/projects/deploy/en/latest/building-blocks/data-access/#stac-api-access-control). It needs STAC Auth Proxy `v1.0.0` or later, which comes with the [eoAPI Helm chart](https://github.com/developmentseed/eoapi-k8s) from version `0.8.1`.
+
+The rules live in one Python file, [`eoepca_filters.py`](https://github.com/EOEPCA/eoepca-plus/blob/deploy-develop/argocd/eoepca/data-access/parts/stac-auth-proxy/eoepca_filters.py), loaded into the proxy from a ConfigMap. To change the rules, edit the file, update the ConfigMap and restart the proxy. No new image is needed. The EOEPCA+ demo cluster keeps this file and its [tests](https://github.com/EOEPCA/eoepca-plus/blob/deploy-develop/argocd/eoepca/data-access/parts/stac-auth-proxy/test_eoepca_filters.py) in the `eoepca-plus` repository.
+
 ## References
 
-- [EOEPCA/resource-discovery#203](https://github.com/EOEPCA/resource-discovery/issues/203) — design discussion of the policy model
-- [EOEPCA/eoepca-plus#118](https://github.com/EOEPCA/eoepca-plus/pull/118) — implementation of the CQL2 filter logic
-- [STAC Auth Proxy](https://github.com/developmentseed/stac-auth-proxy) — the proxy enforcing the policies
-- [stac-manager#71](https://github.com/developmentseed/stac-manager/pull/71) — STAC Manager sending credentials on all requests
+- [EOEPCA/resource-discovery#203](https://github.com/EOEPCA/resource-discovery/issues/203): design of the access rules
+- [EOEPCA/eoepca-plus#118](https://github.com/EOEPCA/eoepca-plus/pull/118): implementation
+- [STAC Auth Proxy documentation](https://developmentseed.org/stac-auth-proxy/)
+- [stac-manager#71](https://github.com/developmentseed/stac-manager/pull/71): STAC Manager sends the token with every request

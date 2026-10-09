@@ -29,9 +29,9 @@ eoAPI is used as Data Catalogue in addition to pycsw providing STAC API and conn
 
 Both components are deployed by default with PostgreSQL as a backend. In the roadmap of EOEPCA, support for Elasticsearch as a backend will be implemented. In this setup, collection metadata from the eoAPI-based data catalogue are registered into pycsw (e.g., using the PubSub mechanism) so that the resource catalogue provide a high-level overview of all resources. Operators of the platform may choose to implement one or both of the catalogue components, depending on their requirements.
 
-The web-based administration interface is based on STAC Admin, EOxElements, and STAC Browser allowing for editing STAC and OGC API - Records metadata amongst other functionalities.
+The web-based administration interface is [STAC Manager](resource-admin-ui/index.md), used to create and edit STAC collections and items in the Data Catalogue.
 
-All APIs are protected with the Tyk-based API Gateway, which connects to the Identity Management building block for authentication and authorization. In addition, Tyk is able to cache requests and conduct rate-limiting.
+The STAC API of the Data Catalogue uses [STAC Auth Proxy](https://github.com/developmentseed/stac-auth-proxy) to decide who may read and write each collection, based on logins from the Identity Management building block. See [Access Control](data-catalogue/auth.md).
 
 Further relations exist to the Resource Registration building block, which acts as a transactional client to both catalogue services. In addition, the GitOps-based deployment with Helm Charts and ArgoCD/FluxCD ensures the integration of the proposed components into the Workspace building block.
 
