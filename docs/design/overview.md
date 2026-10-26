@@ -65,7 +65,7 @@ The table below compares the deployment options. ✅ means supported, ⚠️ mea
 | Non-STAC resource types (workflows, services, notebooks, …) | ❌ | ✅ | ✅ if pycsw | ✅ | ❌ |
 | STAC API (incl. collection search) | ✅ | ✅ | ✅ | ✅ (two STAC APIs) | ✅ |
 | STAC Transaction extension | ✅ | ✅ | ✅ | ✅ | ❌ (read-only) |
-| Raster tiles and maps from STAC items (TiTiler) | ✅ | ❌ | ✅ | ✅ | ✅ |
+| Raster tiles and maps from STAC items (TiTiler) | ✅ | ❌ (WIP: titiler-pycsw) | ✅ | ✅ | ✅ |
 | Dynamic mosaics from STAC searches | ✅ | ❌ (WIP: titiler-pycsw) | ❌ (WIP: titiler-pycsw) | ✅ | ❌ |
 | Vector features and tiles (TiPg) | ✅ | ❌ | ❌ | ✅ | ❌ |
 | Single endpoint for discovering all resources | ⚠️ STAC only | ✅ | ✅ if pycsw | ⚠️ needs sync or duplication | ⚠️ STAC only |
